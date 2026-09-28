@@ -60,6 +60,8 @@ function Area(Increment, Count, Width, Height, Margin = 10) {
  */
 function resizeVideoMedia() {
     if (isHideALLVideosActive) return;
+    // [CUSTOM] Voice-room member rows are sized purely by voiceRoom.css.
+    if (document.body.classList.contains('voice-room')) return;
 
     const videoMediaContainer = getId('videoMediaContainer');
     // Include both Camera and Screen tiles in layout sizing

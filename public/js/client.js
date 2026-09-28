@@ -1484,10 +1484,90 @@ function initCursorLightEffect() {
     });
 }
 
+// ============================================================
+// [CUSTOM] Voice-room layout (KOOK/Discord style two columns)
+// ============================================================
+const VOICE_ROOM = { layout: false, enabled: false, dateKey: '' };
+
+/**
+ * Fetch the voice-room config and tag <body> accordingly, so the
+ * voiceRoom.css layout applies before themes and buttons are set up.
+ */
+async function initVoiceRoom() {
+    try {
+        const response = await axios.get('/voice-room', { timeout: 5000 });
+        const cfg = response.data.message;
+        if (cfg && cfg.layout) {
+            VOICE_ROOM.layout = true;
+            document.body.classList.add('voice-room');
+            if (isMobileDevice) document.body.classList.add('voice-mobile');
+        }
+    } catch (error) {
+        console.error('AXIOS GET VOICE ROOM ERROR', error.message);
+    }
+}
+
+/**
+ * Once buttons config is applied, reshape the room: chat becomes a
+ * permanent column and the toolbar drops its redundant buttons.
+ */
+function initVoiceRoomLayout() {
+    if (!VOICE_ROOM.layout) return;
+    VOICE_ROOM.enabled = true;
+
+    elemDisplay(msgerDraggable, true, 'flex');
+    isChatRoomVisible = true;
+    elemDisplay(msgerClose, false);
+    elemDisplay(chatRoomBtn, false);
+
+    if (isMobileDevice) {
+        document.body.classList.add('voice-mobile');
+    }
+    // Drawer toggle: always wired, the button itself is only visible on
+    // narrow screens via the voiceRoom.css media query.
+    const membersBtn = getId('voiceMembersBtn');
+    membersBtn?.addEventListener('click', () => toggleVoiceRoomDrawer());
+    getId('voiceDrawerOverlay')?.addEventListener('click', () => toggleVoiceRoomDrawer(false));
+
+    if (!isMobileDevice) {
+        // Dock the chat by reusing the pinned-chat state, so every unpin
+        // path stays dormant; sizing itself is done by voiceRoom.css.
+        isChatPinned = true;
+        setChatPinnedLayout(true);
+        undragElement(msgerDraggable, msgerHeader);
+        elemDisplay(msgerTogglePin, false);
+        elemDisplay(msgerMinBtn, false);
+        elemDisplay(msgerMaxBtn, false);
+    }
+    updateVoiceRoomHeader();
+}
+
+/**
+ * Sync the left sidebar header (room name + member count).
+ */
+function updateVoiceRoomHeader() {
+    if (!VOICE_ROOM.enabled) return;
+    const name = getId('voiceRoomName');
+    if (name) name.textContent = '#' + roomId;
+    const count = getId('voiceRoomCount');
+    if (count) count.textContent = videoMediaContainer.childElementCount;
+}
+
+/**
+ * Open/close the members drawer on narrow screens.
+ */
+function toggleVoiceRoomDrawer(force) {
+    if (!VOICE_ROOM.enabled) return;
+    const open =
+        typeof force === 'boolean' ? force : !document.body.classList.contains('voice-drawer-open');
+    document.body.classList.toggle('voice-drawer-open', open);
+}
+
 /**
  * On body load Get started
  */
 async function initClientPeer() {
+    await initVoiceRoom(); // [CUSTOM] tag <body> before any layout/theme work
     await getThemes();
     setTheme();
 
@@ -1625,6 +1705,7 @@ async function handleConnect() {
         setupVideoUrlPlayer();
         handleDropdownHover();
         setupQuickDeviceSwitchDropdowns();
+        initVoiceRoomLayout(); // [CUSTOM] dock chat + trim toolbar before first paint
         startSessionTime();
         await whoAreYou();
     }
@@ -3696,6 +3777,28 @@ let themeMap = {
         '--btns-bg-color': 'rgba(30, 28, 14, 0.75)',
         '--dd-color': '#FACC15',
     },
+    voice: {
+        // [CUSTOM] KOOK/Discord-style dark palette for the voice-room layout.
+        '--body-bg': '#313338',
+        '--msger-bg': '#313338',
+        '--msger-private-bg': '#2b2d31',
+        '--wb-bg': '#2b2d31',
+        '--elem-border-color': '1px solid rgba(255, 255, 255, 0.06)',
+        '--navbar-bg': 'rgba(43, 45, 49, 0.9)',
+        '--select-bg': '#1e1f22',
+        '--tab-btn-active': '#404249',
+        '--box-shadow': '0px 4px 12px 0px rgba(0, 0, 0, 0.5)',
+        '--left-msg-bg': '#383a40',
+        '--right-msg-bg': '#383a40',
+        '--private-msg-bg': '#2f3136',
+        '--btn-bar-bg-color': '#ffffff',
+        '--btn-bar-color': '#2b2d31',
+        '--btns-bg-color': 'rgba(43, 45, 49, 0.9)',
+        '--dd-color': '#5865f2',
+        '--toggle-off-bg': '#1e1f22',
+        '--toggle-on-bg': '#5865f2',
+        '--toggle-on-ink': '#FFFFFF',
+    },
 };
 
 /**
@@ -3751,7 +3854,10 @@ function setTheme() {
     if (themeCustom.keep) return setCustomTheme();
 
     mirotalkTheme.selectedIndex = lsSettings.theme;
-    const theme = mirotalkTheme.value;
+    let theme = mirotalkTheme.value;
+    // [CUSTOM] Voice-room deployments default to the voice theme until the
+    // user explicitly picks one in the settings.
+    if (VOICE_ROOM.enabled && !lsSettings.theme_explicit) theme = 'voice';
     const vars = themeMap[theme];
 
     if (!vars) {
@@ -3875,6 +3981,11 @@ async function initEnumerateAudioDevices() {
  */
 async function initEnumerateVideoDevices() {
     if (isEnumerateVideoDevices) return;
+    // [CUSTOM] Server buttons config is authoritative: when the video button
+    // is disabled there is no camera access at all (no permission prompt,
+    // no recording indicator).
+    if (useVideo && !buttons.main.showVideoBtn) useVideo = false;
+    if (!useVideo) return;
     // allow the video
     await navigator.mediaDevices
         .getUserMedia({ video: true })
@@ -5695,6 +5806,9 @@ function adaptAspectRatio() {
             ? elemDisplay(participantsCountBadge, true, 'flex')
             : elemDisplay(participantsCountBadge, false);
     }
+
+    updateVoiceRoomHeader(); // [CUSTOM] keep the sidebar member count in sync
+    if (VOICE_ROOM.enabled) return; // [CUSTOM] member rows are sized by voiceRoom.css
 
     const selectedAspectRatio = Number(lsSettings.video_aspect_ratio) || 0;
     if (selectedAspectRatio) {
@@ -8542,6 +8656,7 @@ function setupMySettings() {
     // select themes
     themeSelect.addEventListener('change', (e) => {
         lsSettings.theme = themeSelect.selectedIndex;
+        lsSettings.theme_explicit = true; // [CUSTOM] stop forcing the voice default
         lS.setSettings(lsSettings);
         setTheme();
     });
@@ -10868,6 +10983,17 @@ function setChatRoomAndCaptionForMobile() {
  * Show msger draggable on center screen position
  */
 function showChatRoomDraggable() {
+    if (VOICE_ROOM.enabled) {
+        // [CUSTOM] The chat is a permanent column: never re-center, never
+        // hide the toolbar, just make sure it is visible.
+        if (!isChatRoomVisible) {
+            elemDisplay(msgerDraggable, true, 'flex');
+            isChatRoomVisible = true;
+        }
+        syncParticipantsPanelVisibility();
+        syncChatToolbarButtons();
+        return;
+    }
     playSound('newMessage');
 
     if (isMobileDevice) {
@@ -11405,6 +11531,13 @@ function cleanCaptions() {
  * Hide chat room and emoji picker
  */
 function hideChatRoomAndEmojiPicker() {
+    if (VOICE_ROOM.enabled) {
+        // [CUSTOM] The chat is a permanent column in the voice room; only
+        // transient popovers (emoji picker) may close.
+        elemDisplay(msgerEmojiPicker, false);
+        isChatEmojiVisible = false;
+        return;
+    }
     if (isChatPinned) {
         chatUnpin();
     }
@@ -11945,6 +12078,25 @@ function appendMessage(from, img, side, msg, privateMsg, msgId = null, to = '') 
             messageTextId: `message-${chatMessagesId}`,
         },
     });
+
+    // [CUSTOM] Voice room: group messages by day with a divider.
+    if (VOICE_ROOM.enabled) {
+        const now = new Date();
+        const dateKey = now.toDateString();
+        if (dateKey !== VOICE_ROOM.dateKey) {
+            VOICE_ROOM.dateKey = dateKey;
+            const label = now.toLocaleDateString(undefined, {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                weekday: 'long',
+            });
+            msgerChat.insertAdjacentHTML(
+                'beforeend',
+                `<div class="msg-date-divider"><span>${filterXSS(label)}</span></div>`
+            );
+        }
+    }
 
     msgerChat.insertAdjacentHTML('beforeend', msgHTML);
     const msgAvatarEl = document.getElementById(msgAvatarTmpId);

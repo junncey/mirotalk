@@ -24,3 +24,7 @@ output
 env.txt
 
 .idea
+
+# AI 会话产物 / 本地草稿，不入仓库
+.zcode/
+frontend-plans.html

@@ -35,6 +35,7 @@
         <link rel="stylesheet" href="../css/_tokens.css" />
         <link rel="stylesheet" href="../css/client.css" />
         <link rel="stylesheet" href="../css/videoGrid.css" />
+        <link rel="stylesheet" href="../css/voiceRoom.css" />
         <link rel="stylesheet" href="../css/whiteboard.css" />
         <link rel="stylesheet" href="../css/translate.css" />
 
@@ -417,6 +418,8 @@
                         </div>
                     </div>
                     <div class="msger-header-options">
+                        <!-- [CUSTOM] Voice-room members drawer toggle (mobile only) -->
+                        <button id="voiceMembersBtn" class="fas fa-user-group voice-members-toggle"></button>
                         <button id="msgerCPBtn" class="fas fa-users msger-header-participants-btn hidden"></button>
                         <button id="msgerTogglePin" class="fas fa-map-pin"></button>
                         <button id="msgerTheme" class="fas fa-ghost"></button>
@@ -1421,6 +1424,7 @@
                                 <option value="purple">Purple</option>
                                 <option value="orange">Orange</option>
                                 <option value="yellow">Yellow</option>
+                                <option value="voice">Voice</option>
                             </select>
                             <div id="themeCardsGrid" class="theme-cards-grid">
                                 <div class="theme-card" data-theme="dark" data-index="0">
@@ -1454,6 +1458,10 @@
                                 <div class="theme-card" data-theme="yellow" data-index="7">
                                     <i class="fa-solid fa-star"></i>
                                     <span>Yellow</span>
+                                </div>
+                                <div class="theme-card" data-theme="voice" data-index="8">
+                                    <i class="fa-solid fa-headphones"></i>
+                                    <span>Voice</span>
                                 </div>
                             </div>
                         </div>
@@ -1928,6 +1936,21 @@
         <!-- Start Video container -->
 
         <div id="videoPinMediaContainer"></div>
+
+        <!-- [CUSTOM] Voice-room left sidebar header -->
+        <div id="voiceSidebarHeader" class="voice-sidebar-header">
+            <div class="voice-sidebar-title">
+                <i class="fa-solid fa-volume-high"></i>
+                <span id="voiceRoomName" class="notranslate">#room</span>
+            </div>
+            <div class="voice-sidebar-meta">
+                <span id="voiceRoomCount" class="voice-sidebar-count">0</span>
+                <i class="fa-solid fa-user-group"></i>
+            </div>
+        </div>
+        <!-- [CUSTOM] Voice-room mobile drawer overlay -->
+        <div id="voiceDrawerOverlay" class="voice-drawer-overlay"></div>
+
         <div id="videoMediaContainer">
             <!-- <div class="Camera">
                 <video></video>

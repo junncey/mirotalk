@@ -1,0 +1,518 @@
+/*
+ * [CUSTOM] Voice-room layout — KOOK/Discord style audio-first room.
+ *
+ * Loaded after videoGrid.css. Every layout rule is scoped to
+ * body.voice-room, which client.js sets when the server-side
+ * /voice-room config reports layout: true. When the flag is off this
+ * file only hides its own (nonexistent) hooks and changes nothing.
+ */
+
+:root {
+    --vr-sidebar-w: 320px;
+    --vr-header-h: 56px;
+    --vr-dock-h: 68px;
+}
+
+/* Hooks hidden unless the voice room is active */
+#voiceSidebarHeader,
+#voiceDrawerOverlay,
+.voice-members-toggle {
+    display: none;
+}
+
+/* ============================================================
+# Desktop skeleton: members sidebar + permanent chat column
+============================================================ */
+
+body.voice-room #voiceSidebarHeader {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: var(--vr-sidebar-w);
+    height: var(--vr-header-h);
+    z-index: 10;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 14px;
+    box-sizing: border-box;
+    background: var(--navbar-bg, rgba(43, 45, 49, 0.9));
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    color: #fff;
+}
+
+body.voice-room .voice-sidebar-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    min-width: 0;
+}
+
+body.voice-room .voice-sidebar-title i {
+    color: var(--dd-color, #5865f2);
+    font-size: 14px;
+}
+
+body.voice-room .voice-sidebar-title span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+body.voice-room .voice-sidebar-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #b5bac1;
+    flex-shrink: 0;
+}
+
+/* Members column (reuses the video tile container) */
+body.voice-room #videoMediaContainer {
+    position: fixed !important;
+    top: var(--vr-header-h) !important;
+    left: 0 !important;
+    right: auto !important;
+    bottom: var(--vr-dock-h) !important;
+    width: var(--vr-sidebar-w) !important;
+    height: auto !important;
+    box-sizing: border-box;
+    z-index: 5;
+    display: flex !important;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    justify-content: flex-start;
+    align-content: flex-start;
+    gap: 6px;
+    padding: 10px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: transparent;
+    border-radius: 0;
+}
+
+/* Video grid has no background of its own in the voice room */
+body.voice-room #videoPinMediaContainer {
+    display: none !important;
+}
+
+/* Toolbar becomes a dock pinned to the bottom of the sidebar */
+body.voice-room #bottomButtons {
+    display: flex !important;
+    position: fixed !important;
+    top: auto !important;
+    left: 0 !important;
+    right: auto !important;
+    bottom: 0 !important;
+    transform: none !important;
+    width: var(--vr-sidebar-w) !important;
+    min-height: var(--vr-dock-h);
+    box-sizing: border-box;
+    flex-direction: row !important;
+    align-items: center;
+    justify-content: space-around;
+    gap: 2px;
+    margin: 0 !important;
+    padding: 8px 10px !important;
+    border-radius: 0 !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+    background: var(--btns-bg-color, rgba(43, 45, 49, 0.9)) !important;
+    backdrop-filter: blur(12px);
+    z-index: 12;
+}
+
+body.voice-room #bottomButtons button {
+    width: 38px;
+    height: 38px;
+    padding: 6px;
+    font-size: 1.05rem;
+}
+
+body.voice-room #bottomButtons .split-btn > button {
+    background: transparent;
+    border-radius: 8px;
+    min-width: 0;
+}
+
+body.voice-room #bottomButtons .device-dropdown-toggle {
+    width: 26px;
+    padding: 6px 2px;
+}
+
+/* Participant view mode switch is a video-grid concept */
+body.voice-room #participantViewDropdown {
+    display: none !important;
+}
+
+body.voice-room #bottomButtons .split-btn > button:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* Video controls have no meaning in an audio-only room */
+body.voice-room #videoSplit,
+body.voice-room #chatRoomBtn {
+    display: none !important;
+}
+
+/* ============================================================
+# Member rows (former .Camera tiles)
+============================================================ */
+
+body.voice-room .Camera {
+    width: 100% !important;
+    height: auto !important;
+    max-width: none !important;
+    min-height: 0 !important;
+    display: flex !important;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    overflow: visible;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: none;
+    animation: none;
+}
+
+body.voice-room .Camera:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+body.voice-room .Camera > video {
+    display: none !important;
+}
+
+body.voice-room .Camera > .videoAvatarImage {
+    display: block !important;
+    position: static !important;
+    transform: none !important;
+    width: 38px !important;
+    height: 38px !important;
+    margin: 0 !important;
+    flex-shrink: 0;
+}
+
+body.voice-room .Camera > .videoPeerName {
+    display: flex !important; /* beats the inactivity-hider's inline display:none */
+    position: static !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border-radius: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #f2f3f5;
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    align-items: center;
+}
+
+body.voice-room .Camera > .navbar {
+    display: flex !important; /* beats the inactivity-hider's inline display:none */
+    position: static !important;
+    width: auto !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    gap: 2px;
+    flex-shrink: 0;
+    text-align: left;
+}
+
+body.voice-room .Camera > .navbar button {
+    min-width: 28px;
+    min-height: 28px;
+    margin: 0;
+    padding: 6px;
+    font-size: 0.85rem;
+    background: transparent;
+    border-radius: 6px;
+    color: #b5bac1;
+}
+
+body.voice-room .Camera > .navbar button:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: #fff;
+}
+
+body.voice-room .Camera > .navbar div {
+    display: inline-flex;
+    align-items: center;
+}
+
+/* Video-centric navbar controls are meaningless in audio-only rows */
+body.voice-room .Camera .navbar button[class*='fa-video'],
+body.voice-room .Camera .navbar .navbar-secondary-action,
+body.voice-room .Camera .navbar .navbar-compact-action,
+body.voice-room .Camera .navbar .navbar-session-time {
+    display: none !important;
+}
+
+/* Remote volume slider, if enabled, fits the row */
+body.voice-room .Camera .navbar input[type='range'] {
+    width: 64px;
+}
+
+/* Speaking meter is redundant in compact rows */
+body.voice-room .Camera > .speechbar,
+body.voice-room .Camera > .video-loading-spinner {
+    display: none !important;
+}
+
+/* ============================================================
+# Chat: permanent right column
+============================================================ */
+
+body.voice-room #msgerDraggable {
+    display: flex !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: var(--vr-sidebar-w) !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: auto !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    transform: none !important;
+    margin: 0;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    backdrop-filter: none;
+    overflow: visible;
+    z-index: 9;
+}
+
+body.voice-room #msgerDraggable .msger {
+    border-radius: 0;
+    background: var(--msger-bg, #313338);
+}
+
+body.voice-room #msgerDraggable .msger-layout {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+body.voice-room #msgerHeader {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    background: transparent;
+}
+
+/* ============================================================
+# Messages: KOOK-style single-column feed
+============================================================ */
+
+body.voice-room .msg,
+body.voice-room .left-msg,
+body.voice-room .right-msg {
+    flex-direction: row !important;
+    align-items: flex-start;
+    margin: 0 0 2px;
+    padding: 2px 14px;
+}
+
+body.voice-room .msg-grouped {
+    margin-top: -2px;
+}
+
+/* Grouped messages drop the repeated avatar and name row */
+body.voice-room .msg-grouped > .msg-img,
+body.voice-room .msg-grouped .msg-info {
+    display: none;
+}
+
+body.voice-room .msg-img {
+    width: 38px;
+    height: 38px;
+    margin: 4px 0 0;
+    border: none;
+    box-shadow: none;
+    flex-shrink: 0;
+}
+
+body.voice-room .msg-grouped .msg-bubble {
+    margin-left: calc(38px + 12px);
+}
+
+body.voice-room .left-msg .msg-bubble,
+body.voice-room .right-msg .msg-bubble,
+body.voice-room .left-msg .private-msg-bubble,
+body.voice-room .right-msg .private-msg-bubble {
+    background: var(--left-msg-bg, #383a40);
+    border-radius: 8px;
+    box-shadow: none;
+}
+
+body.voice-room .private-msg-bubble,
+body.voice-room .msg-bubble {
+    max-width: min(72%, 680px);
+    padding: 8px 12px;
+    border-radius: 8px;
+}
+
+body.voice-room .msg-info {
+    gap: 10px;
+    margin-bottom: 2px;
+}
+
+body.voice-room .msg-info-name {
+    font-size: 0.95rem;
+    color: #f2f3f5;
+}
+
+body.voice-room .msg-info-time {
+    font-size: 0.68rem;
+    opacity: 0.55;
+}
+
+body.voice-room .msg-text {
+    font-size: 0.92rem;
+    line-height: 1.45;
+}
+
+/* Message actions (delete/copy/react) appear on hover, KOOK style */
+body.voice-room .msg-footer {
+    display: flex;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+
+body.voice-room .msg:hover .msg-footer {
+    opacity: 1;
+}
+
+body.voice-room .msg-text hr {
+    display: none;
+}
+
+/* Day dividers */
+body.voice-room .msg-date-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 16px 18px 8px;
+    color: #949ba4;
+    font-size: 12px;
+    user-select: none;
+}
+
+body.voice-room .msg-date-divider::before,
+body.voice-room .msg-date-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* Composer */
+body.voice-room .msger-inputarea .msger-input {
+    background: var(--select-bg, #404249);
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+}
+
+body.voice-room .msger-input-buttons button {
+    color: #b5bac1;
+}
+
+body.voice-room .msger-input-buttons button:hover {
+    color: #fff;
+}
+
+/* ============================================================
+# Narrow screens: drawer + full-height chat
+============================================================ */
+
+@media (max-width: 767px) {
+    :root {
+        --vr-sidebar-w: min(78vw, 320px);
+        --vr-dock-h: 60px;
+    }
+
+    body.voice-room #voiceSidebarHeader {
+        width: var(--vr-sidebar-w);
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+        z-index: 31;
+    }
+
+    body.voice-room #videoMediaContainer {
+        top: var(--vr-header-h) !important;
+        width: var(--vr-sidebar-w) !important;
+        bottom: var(--vr-dock-h) !important;
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+        background: var(--msger-private-bg, #2b2d31);
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+        z-index: 30;
+    }
+
+    body.voice-room.voice-drawer-open #voiceSidebarHeader,
+    body.voice-room.voice-drawer-open #videoMediaContainer {
+        transform: none;
+    }
+
+    body.voice-room #voiceDrawerOverlay {
+        display: block;
+        position: fixed;
+        inset: 0;
+        z-index: 28;
+        background: rgba(0, 0, 0, 0.55);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+    }
+
+    body.voice-room.voice-drawer-open #voiceDrawerOverlay {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    body.voice-room #msgerDraggable {
+        left: 0 !important;
+        bottom: var(--vr-dock-h) !important;
+        z-index: 9;
+    }
+
+    body.voice-room #bottomButtons {
+        width: 100% !important;
+        min-height: var(--vr-dock-h);
+        z-index: 26;
+    }
+
+    body.voice-room .voice-members-toggle {
+        display: inline-flex;
+    }
+
+    body.voice-room .msg,
+    body.voice-room .left-msg,
+    body.voice-room .right-msg {
+        padding: 2px 10px;
+    }
+
+    body.voice-room .msg-date-divider {
+        margin: 14px 10px 6px;
+    }
+
+    body.voice-room .private-msg-bubble,
+    body.voice-room .msg-bubble {
+        max-width: 82%;
+    }
+}
+
+/* Mobile Safari/Chrome URL bar: keep the drawer transform smooth */
+body.voice-room #videoMediaContainer {
+    will-change: transform;
+}

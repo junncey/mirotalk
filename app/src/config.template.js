@@ -43,6 +43,10 @@ function parseJsonEnv(envValue, fallback) {
 
 const port = process.env.PORT || 3000;
 
+// [CUSTOM] Audio-only deployments: when VIDEO_ENABLED=false the video and
+// screen-share UI are hidden and the camera is never requested at all.
+const videoEnabled = getEnvBoolean(process.env.VIDEO_ENABLED, true);
+
 module.exports = {
     // ==========================================
     // Server
@@ -331,8 +335,8 @@ module.exports = {
     brand: {
         htmlInjection: true,
         app: {
-            language: 'en', // https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes
-            translationMode: 'google', // In-room UI: auto (native file else Google) | native (human files only, no Google) | google (default, always Google)
+            language: process.env.UI_LANGUAGE || 'en', // [CUSTOM] https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes
+            translationMode: process.env.UI_TRANSLATION_MODE || 'google', // [CUSTOM] In-room UI: auto (native file else Google) | native (human files only, no Google) | google (default, always Google)
             name: 'MiroTalk',
             title: '<h1>MiroTalk</h1>Free browser based Real-time video calls.<br />Simple, Secure, Fast.',
             description:
@@ -520,8 +524,8 @@ module.exports = {
     buttons: {
         main: {
             showAudioBtn: true,
-            showVideoBtn: true,
-            showScreenBtn: true, // autodetected
+            showVideoBtn: videoEnabled, // [CUSTOM] VIDEO_ENABLED
+            showScreenBtn: videoEnabled, // [CUSTOM] VIDEO_ENABLED (was autodetected)
             showMyHandBtn: true,
             showChatRoomBtn: true,
             showParticipantsBtn: true,
@@ -574,7 +578,7 @@ module.exports = {
         remote: {
             showAudioVolume: true,
             audioBtnClickAllowed: true,
-            videoBtnClickAllowed: true,
+            videoBtnClickAllowed: videoEnabled, // [CUSTOM] VIDEO_ENABLED
             showVideoPipBtn: true,
             showKickOutBtn: true,
             showSnapShotBtn: true,
@@ -595,6 +599,15 @@ module.exports = {
         whiteboard: {
             whiteboardLockBtn: false,
         },
+    },
+    /**
+     * [CUSTOM] Voice-room layout: reshapes the room page into an
+     * audio-first two-column layout (voice members on the left,
+     * permanent text chat on the right). Requires audio-only mode
+     * (VIDEO_ENABLED=false) for the intended experience.
+     */
+    voiceRoom: {
+        layout: getEnvBoolean(process.env.VOICE_ROOM_LAYOUT, false),
     },
     // ==========================================
     // Webhook

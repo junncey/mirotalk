@@ -30,6 +30,7 @@ class LocalStorage {
             keyboard_shortcuts: false,
             video_obj_fit: 2, // cover
             theme: 0, // dark
+            theme_explicit: false, // [CUSTOM] user picked a theme manually
             theme_color: '#000000', // custom theme color
             theme_custom: false, // keep custom theme
             buttons_bar: 0, // vertical

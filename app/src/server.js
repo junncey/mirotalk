@@ -873,6 +873,11 @@ app.get('/buttons', (req, res) => {
     res.status(200).json({ message: config.buttons ? config.buttons : false });
 });
 
+// [CUSTOM] Voice-room layout configuration
+app.get('/voice-room', (req, res) => {
+    res.status(200).json({ message: config.voiceRoom ? config.voiceRoom : false });
+});
+
 // UI themes configuration
 app.get('/themes', (req, res) => {
     res.status(200).json({ message: config.themes ? config.themes : false });
