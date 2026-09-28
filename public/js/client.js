@@ -1567,6 +1567,14 @@ function toggleVoiceRoomDrawer(force) {
  * On body load Get started
  */
 async function initClientPeer() {
+    // [CUSTOM] Wait for the i18n decision: the signaling socket can connect
+    // before the language file is fetched, and tooltips/tiles created in that
+    // window would keep English labels (e.g. the local "Toggle Pin video").
+    try {
+        await window.i18n?.ready;
+    } catch (err) {
+        /* proceed with whatever language resolved */
+    }
     await initVoiceRoom(); // [CUSTOM] tag <body> before any layout/theme work
     await getThemes();
     setTheme();
@@ -3631,154 +3639,7 @@ function handleRemovePeer(config) {
  */
 let themeMap = {
     dark: {
-        '--body-bg': 'radial-gradient(#2a2a2e, #121214)',
-        '--msger-bg': 'radial-gradient(#2a2a2e, #121214)',
-        '--msger-private-bg': 'radial-gradient(#2a2a2e, #121214)',
-        '--wb-bg': 'radial-gradient(#2a2a2e, #121214)',
-        '--elem-border-color': '1px solid rgba(255, 255, 255, 0.08)',
-        '--navbar-bg': 'rgba(18, 18, 20, 0.85)',
-        '--select-bg': '#333338',
-        '--tab-btn-active': '#3d3d42',
-        '--box-shadow': '0px 4px 12px 0px rgba(0, 0, 0, 0.5)',
-        '--left-msg-bg': '#2c2c30',
-        '--right-msg-bg': '#3a3a40',
-        '--private-msg-bg': '#252528',
-        '--btn-bar-bg-color': '#E8E8EC',
-        '--btn-bar-color': '#121214',
-        '--btns-bg-color': 'rgba(18, 18, 20, 0.75)',
-        '--dd-color': '#E8E8EC',
-        '--toggle-off-bg': '#000000',
-        '--toggle-on-bg': 'green',
-        '--toggle-on-ink': '#FFFFFF',
-    },
-    grey: {
-        '--body-bg': 'radial-gradient(#3b3f47, #1e2028)',
-        '--msger-bg': 'radial-gradient(#3b3f47, #1e2028)',
-        '--msger-private-bg': 'radial-gradient(#3b3f47, #1e2028)',
-        '--wb-bg': 'radial-gradient(#434750, #252830)',
-        '--elem-border-color': '1px solid rgba(255, 255, 255, 0.08)',
-        '--navbar-bg': 'rgba(30, 32, 40, 0.85)',
-        '--select-bg': '#32363e',
-        '--tab-btn-active': '#484c55',
-        '--box-shadow': '0px 4px 12px 0px rgba(0, 0, 0, 0.45)',
-        '--left-msg-bg': '#33373f',
-        '--right-msg-bg': '#434750',
-        '--private-msg-bg': '#2d3038',
-        '--btn-bar-bg-color': '#E8E8EC',
-        '--btn-bar-color': '#1e2028',
-        '--btns-bg-color': 'rgba(30, 32, 40, 0.75)',
-        '--dd-color': '#E0E0E6',
-    },
-    green: {
-        '--body-bg': 'radial-gradient(#1a3a32, #0d1f1a)',
-        '--msger-bg': 'radial-gradient(#1a3a32, #0d1f1a)',
-        '--msger-private-bg': 'radial-gradient(#1a3a32, #0d1f1a)',
-        '--wb-bg': 'radial-gradient(#1a3a32, #0d1f1a)',
-        '--elem-border-color': '1px solid rgba(72, 199, 154, 0.15)',
-        '--navbar-bg': 'rgba(13, 31, 26, 0.88)',
-        '--select-bg': '#17332b',
-        '--tab-btn-active': '#22493e',
-        '--box-shadow': '0px 4px 12px 0px rgba(0, 0, 0, 0.5)',
-        '--left-msg-bg': '#1e3f36',
-        '--right-msg-bg': '#14302a',
-        '--private-msg-bg': '#153028',
-        '--btn-bar-bg-color': '#E8F5E9',
-        '--btn-bar-color': '#0d1f1a',
-        '--btns-bg-color': 'rgba(13, 31, 26, 0.75)',
-        '--dd-color': '#48C79A',
-    },
-    blue: {
-        '--body-bg': 'radial-gradient(#1b2a4a, #0f1729)',
-        '--msger-bg': 'radial-gradient(#1b2a4a, #0f1729)',
-        '--msger-private-bg': 'radial-gradient(#1b2a4a, #0f1729)',
-        '--wb-bg': 'radial-gradient(#1b2a4a, #0f1729)',
-        '--elem-border-color': '1px solid rgba(96, 165, 250, 0.15)',
-        '--navbar-bg': 'rgba(15, 23, 41, 0.88)',
-        '--select-bg': '#182440',
-        '--tab-btn-active': '#243656',
-        '--box-shadow': '0px 4px 12px 0px rgba(0, 0, 0, 0.5)',
-        '--left-msg-bg': '#1e2e50',
-        '--right-msg-bg': '#152038',
-        '--private-msg-bg': '#172545',
-        '--btn-bar-bg-color': '#E3F2FD',
-        '--btn-bar-color': '#0f1729',
-        '--btns-bg-color': 'rgba(15, 23, 41, 0.75)',
-        '--dd-color': '#60A5FA',
-    },
-    red: {
-        '--body-bg': 'radial-gradient(#3d1520, #1c0a10)',
-        '--msger-bg': 'radial-gradient(#3d1520, #1c0a10)',
-        '--msger-private-bg': 'radial-gradient(#3d1520, #1c0a10)',
-        '--wb-bg': 'radial-gradient(#3d1520, #1c0a10)',
-        '--elem-border-color': '1px solid rgba(248, 113, 113, 0.15)',
-        '--navbar-bg': 'rgba(28, 10, 16, 0.88)',
-        '--select-bg': '#35121c',
-        '--tab-btn-active': '#4d1a28',
-        '--box-shadow': '0px 4px 12px 0px rgba(0, 0, 0, 0.5)',
-        '--left-msg-bg': '#421824',
-        '--right-msg-bg': '#2e1018',
-        '--private-msg-bg': '#381420',
-        '--btn-bar-bg-color': '#FDE8E8',
-        '--btn-bar-color': '#1c0a10',
-        '--btns-bg-color': 'rgba(28, 10, 16, 0.75)',
-        '--dd-color': '#F87171',
-    },
-    purple: {
-        '--body-bg': 'radial-gradient(#2a1840, #150d24)',
-        '--msger-bg': 'radial-gradient(#2a1840, #150d24)',
-        '--msger-private-bg': 'radial-gradient(#2a1840, #150d24)',
-        '--wb-bg': 'radial-gradient(#2a1840, #150d24)',
-        '--elem-border-color': '1px solid rgba(192, 132, 252, 0.15)',
-        '--navbar-bg': 'rgba(21, 13, 36, 0.88)',
-        '--select-bg': '#241538',
-        '--tab-btn-active': '#351f4e',
-        '--box-shadow': '0px 4px 12px 0px rgba(0, 0, 0, 0.5)',
-        '--left-msg-bg': '#2e1c45',
-        '--right-msg-bg': '#201230',
-        '--private-msg-bg': '#28163c',
-        '--btn-bar-bg-color': '#F3E8FD',
-        '--btn-bar-color': '#150d24',
-        '--btns-bg-color': 'rgba(21, 13, 36, 0.75)',
-        '--dd-color': '#C084FC',
-    },
-    orange: {
-        '--body-bg': 'radial-gradient(#3d2410, #1e1208)',
-        '--msger-bg': 'radial-gradient(#3d2410, #1e1208)',
-        '--msger-private-bg': 'radial-gradient(#3d2410, #1e1208)',
-        '--wb-bg': 'radial-gradient(#3d2410, #1e1208)',
-        '--elem-border-color': '1px solid rgba(251, 191, 36, 0.15)',
-        '--navbar-bg': 'rgba(30, 18, 8, 0.88)',
-        '--select-bg': '#352010',
-        '--tab-btn-active': '#4d3018',
-        '--box-shadow': '0px 4px 12px 0px rgba(0, 0, 0, 0.5)',
-        '--left-msg-bg': '#422814',
-        '--right-msg-bg': '#2e1c0e',
-        '--private-msg-bg': '#382210',
-        '--btn-bar-bg-color': '#FFF3E0',
-        '--btn-bar-color': '#1e1208',
-        '--btns-bg-color': 'rgba(30, 18, 8, 0.75)',
-        '--dd-color': '#FBBF24',
-    },
-    yellow: {
-        '--body-bg': 'radial-gradient(#3a3418, #1e1c0e)',
-        '--msger-bg': 'radial-gradient(#3a3418, #1e1c0e)',
-        '--msger-private-bg': 'radial-gradient(#3a3418, #1e1c0e)',
-        '--wb-bg': 'radial-gradient(#3a3418, #1e1c0e)',
-        '--elem-border-color': '1px solid rgba(250, 204, 21, 0.15)',
-        '--navbar-bg': 'rgba(30, 28, 14, 0.88)',
-        '--select-bg': '#322e15',
-        '--tab-btn-active': '#4a441e',
-        '--box-shadow': '0px 4px 12px 0px rgba(0, 0, 0, 0.5)',
-        '--left-msg-bg': '#3e381c',
-        '--right-msg-bg': '#2c2812',
-        '--private-msg-bg': '#363018',
-        '--btn-bar-bg-color': '#FFFDE7',
-        '--btn-bar-color': '#1e1c0e',
-        '--btns-bg-color': 'rgba(30, 28, 14, 0.75)',
-        '--dd-color': '#FACC15',
-    },
-    voice: {
-        // [CUSTOM] KOOK/Discord-style dark palette for the voice-room layout.
+        // [CUSTOM] KOOK/Discord-style dark palette (default in voice room).
         '--body-bg': '#313338',
         '--msger-bg': '#313338',
         '--msger-private-bg': '#2b2d31',
@@ -3798,6 +3659,38 @@ let themeMap = {
         '--toggle-off-bg': '#1e1f22',
         '--toggle-on-bg': '#5865f2',
         '--toggle-on-ink': '#FFFFFF',
+        '--vr-ink': '#f2f3f5',
+        '--vr-ink-muted': '#949ba4',
+        '--vr-hover': 'rgba(255, 255, 255, 0.06)',
+        '--vr-border': 'rgba(255, 255, 255, 0.06)',
+        '--vr-row-bg': 'rgba(255, 255, 255, 0.03)',
+    },
+    light: {
+        // [CUSTOM] Matching light palette for the voice room.
+        '--body-bg': '#ffffff',
+        '--msger-bg': '#ffffff',
+        '--msger-private-bg': '#f2f3f5',
+        '--wb-bg': '#f2f3f5',
+        '--elem-border-color': '1px solid rgba(0, 0, 0, 0.08)',
+        '--navbar-bg': 'rgba(242, 243, 245, 0.92)',
+        '--select-bg': '#ebedef',
+        '--tab-btn-active': '#e0e2e6',
+        '--box-shadow': '0px 4px 12px 0px rgba(0, 0, 0, 0.12)',
+        '--left-msg-bg': '#f2f3f5',
+        '--right-msg-bg': '#f2f3f5',
+        '--private-msg-bg': '#ebedef',
+        '--btn-bar-bg-color': '#4e5058',
+        '--btn-bar-color': '#f2f3f5',
+        '--btns-bg-color': 'rgba(255, 255, 255, 0.92)',
+        '--dd-color': '#5865f2',
+        '--toggle-off-bg': '#d8dadd',
+        '--toggle-on-bg': '#5865f2',
+        '--toggle-on-ink': '#FFFFFF',
+        '--vr-ink': '#2e3338',
+        '--vr-ink-muted': '#6a6f82',
+        '--vr-hover': 'rgba(0, 0, 0, 0.05)',
+        '--vr-border': 'rgba(0, 0, 0, 0.08)',
+        '--vr-row-bg': 'rgba(0, 0, 0, 0.03)',
     },
 };
 
@@ -3848,16 +3741,18 @@ function setCustomTheme() {
 }
 
 /**
- * Set mirotalk theme | dark | grey | ...
+ * Set mirotalk theme | dark | light
  */
 function setTheme() {
     if (themeCustom.keep) return setCustomTheme();
 
-    mirotalkTheme.selectedIndex = lsSettings.theme;
-    let theme = mirotalkTheme.value;
-    // [CUSTOM] Voice-room deployments default to the voice theme until the
-    // user explicitly picks one in the settings.
-    if (VOICE_ROOM.enabled && !lsSettings.theme_explicit) theme = 'voice';
+    // [CUSTOM] Clamp stale stored indexes (theme list was reduced to dark/light).
+    const storedTheme = parseInt(lsSettings.theme);
+    mirotalkTheme.selectedIndex =
+        Number.isInteger(storedTheme) && storedTheme >= 0 && storedTheme < mirotalkTheme.options.length
+            ? storedTheme
+            : 0;
+    const theme = mirotalkTheme.value;
     const vars = themeMap[theme];
 
     if (!vars) {
@@ -7751,20 +7646,23 @@ function setChatEmojiBtn() {
     msgerEmojiBtn.addEventListener('click', (e) => {
         // prevent refresh page
         e.preventDefault();
-        if (isMobileDevice || e.detail === 0) {
+        // [CUSTOM] Voice room: hover-open/hover-close is disabled there (the
+        // picker detaches from the composer), so click toggles on desktop too.
+        if (isMobileDevice || e.detail === 0 || VOICE_ROOM.enabled) {
             hideShowEmojiPicker();
         }
     });
-    if (!isMobileDevice) {
+    if (!isMobileDevice && !VOICE_ROOM.enabled) {
         msgerEmojiBtn.addEventListener('mouseenter', showChatEmojiPicker);
         msgerEmojiBtn.closest('.msger-composer')?.addEventListener('mouseleave', hideChatEmojiPicker);
     }
-    // Add emoji picker
-    const pickerOptions = {
-        theme: 'dark',
+    // Add emoji picker. [CUSTOM] Its labels are localized by i18n.js, which
+    // walks the picker's shadow root (the CDN build's own i18n loading is
+    // broken), so nothing special is needed here.
+    const emojiPicker = new EmojiMart.Picker({
+        theme: themeSelect?.value === 'light' ? 'light' : 'dark', // [CUSTOM] follow the room theme
         onEmojiSelect: addEmojiToMsg,
-    };
-    const emojiPicker = new EmojiMart.Picker(pickerOptions);
+    });
     msgerEmojiPicker.appendChild(emojiPicker);
 
     handleClickOutside(emojiPicker, msgerEmojiBtn, () => {
@@ -8656,7 +8554,6 @@ function setupMySettings() {
     // select themes
     themeSelect.addEventListener('change', (e) => {
         lsSettings.theme = themeSelect.selectedIndex;
-        lsSettings.theme_explicit = true; // [CUSTOM] stop forcing the voice default
         lS.setSettings(lsSettings);
         setTheme();
     });
@@ -12240,10 +12137,14 @@ function getConversationMeta() {
 function updateConversationUi() {
     const conversation = getConversationMeta();
 
-    if (msgerConversationLabel) msgerConversationLabel.textContent = conversation.label;
-    if (msgerConversationTitle) msgerConversationTitle.textContent = conversation.title;
-    if (msgerConversationMeta) msgerConversationMeta.textContent = conversation.meta;
-    if (msgerInput) msgerInput.placeholder = conversation.placeholder;
+    // [CUSTOM] Route through i18n: the observer translates added text nodes
+    // but NOT the placeholder attribute assignment below.
+    const t = (s) => (window.i18n ? window.i18n.t(s, 'labels') : s);
+
+    if (msgerConversationLabel) msgerConversationLabel.textContent = t(conversation.label);
+    if (msgerConversationTitle) msgerConversationTitle.textContent = t(conversation.title);
+    if (msgerConversationMeta) msgerConversationMeta.textContent = t(conversation.meta);
+    if (msgerInput) msgerInput.placeholder = t(conversation.placeholder);
 
     if (msgerRoomChatItem) {
         msgerRoomChatItem.classList.toggle('active', activeConversation.type === 'public');
