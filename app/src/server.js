@@ -146,6 +146,12 @@ const io = new Server({
 
 // console.log(io);
 
+// [PATCH] 常驻公开房间：无需登录即可进入（逗号分隔，如 cs,team）
+const OPEN_ROOMS = (process.env.OPEN_ROOMS || '')
+    .split(',')
+    .map((room) => room.trim())
+    .filter(Boolean);
+
 // Host protection (disabled by default)
 const hostCfg = {
     protected: config.host.protected,
@@ -665,7 +671,9 @@ app.post('/isRoomActive', (req, res) => {
     const { roomId } = checkXSS(req.body);
 
     if (roomId && (hostCfg.protected || hostCfg.user_auth || OIDC.enabled)) {
-        const roomActive = Object.prototype.hasOwnProperty.call(peers, roomId);
+        let roomActive = Object.prototype.hasOwnProperty.call(peers, roomId);
+        // [PATCH] 常驻公开房间：始终视为已激活，访客可直接进入（由第一个进入者创建房间）
+        if (OPEN_ROOMS.includes(roomId)) roomActive = true;
         if (roomActive) log.debug('isRoomActive', { roomId, roomActive });
         res.status(200).json({ message: roomActive });
     } else {
@@ -1488,7 +1496,7 @@ io.sockets.on('connect', async (socket) => {
             return log.debug('[' + socket.id + '] [Warning] already joined', channel);
         }
 
-        let is_presenter = true;
+        let is_presenter = false; // [PATCH] 默认非主持人，仅 admin（PRESENTERS）或 token 验证通过者才是
         let authenticatedUsername = null;
 
         // Is this join opening a brand new room (no presenter/host yet)? Computed from
@@ -1501,7 +1509,10 @@ io.sockets.on('connect', async (socket) => {
         // (always validate it), or when host protection is on and this join would open
         // a new room. The last case stops unauthenticated Socket.IO clients from creating
         // protected rooms and becoming presenter, bypassing the HTTP login/waiting-room.
-        const authRequired = hostCfg.user_auth || peer_token || (hostCfg.protected && isRoomNew);
+        // [PATCH] 常驻公开房间：列在 OPEN_ROOMS 中的房间无需登录即可进入/创建
+        const isOpenRoom = OPEN_ROOMS.includes(channel);
+        const authRequired =
+            hostCfg.user_auth || peer_token || (hostCfg.protected && isRoomNew && !isOpenRoom);
 
         // User Auth required, we check if peer valid
         if (authRequired) {
@@ -3125,7 +3136,11 @@ function isAllowedRoomAccess(logMessage, req, hostCfg, peers, roomId) {
     const roomExist = roomId in peers;
     const roomCount = Object.keys(peers).length;
 
+    // [PATCH] 常驻公开房间：无条件允许访问（房间可由访客首次创建）
+    const isOpenRoom = OPEN_ROOMS.includes(roomId);
+
     const allowRoomAccess =
+        isOpenRoom || // [PATCH] 常驻公开房间始终放行
         (!hostCfg.protected && !OIDC.enabled) || // No host protection and OIDC mode enabled (default)
         (OIDCUserAuthenticated && roomExist) || // User authenticated via OIDC and room Exist
         (hostUserAuthenticated && roomExist) || // User authenticated via Login and room Exist
