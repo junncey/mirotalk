@@ -282,10 +282,21 @@
 
     function translateTree(root, forcedNamespace) {
         if (!root) return;
-        // Attributes on the root and its descendants.
-        const elements = root.nodeType === Node.ELEMENT_NODE ? [root, ...root.querySelectorAll('*')] : [];
+        // Attributes on the root and its descendants. ShadowRoots (emoji-mart)
+        // are walked for text/attributes but have no attributes of their own.
+        const isElement = root.nodeType === Node.ELEMENT_NODE;
+        const elements = [
+            ...(isElement ? [root] : []),
+            ...root.querySelectorAll('*'),
+        ];
         for (const el of elements) {
-            if (shouldSkip(el)) continue;
+            if (shouldSkip(el)) {
+                // [CUSTOM] Skipped elements keep their text content untouched
+                // (e.g. a TEXTAREA's initial value), but safe UI attributes such
+                // as placeholder/title/aria-label may still be localized.
+                if (el.tagName === 'TEXTAREA') translateAttributes(el);
+                continue;
+            }
             translateAttributes(el);
         }
         // Text nodes.
@@ -321,6 +332,7 @@
 
     function applyStatic() {
         translateTree(document.body);
+        localizeShadowPickers(document.body);
     }
 
     // Translate content added after load (device menus, chat list, participant menus, tooltips).
@@ -334,8 +346,10 @@
             for (const mutation of mutations) {
                 for (const node of mutation.addedNodes) {
                     try {
-                        if (node.nodeType === Node.ELEMENT_NODE) translateTree(node);
-                        else if (node.nodeType === Node.TEXT_NODE) translateTextNode(node);
+                        if (node.nodeType === Node.ELEMENT_NODE) {
+                            translateTree(node);
+                            localizeShadowPickers(node);
+                        } else if (node.nodeType === Node.TEXT_NODE) translateTextNode(node);
                     } catch (err) {
                         console.warn('i18n observer error', err.message);
                     }
@@ -343,6 +357,29 @@
             }
         });
         observer.observe(document.body, { childList: true, subtree: true });
+    }
+
+    // [CUSTOM] emoji-mart renders its labels inside a shadow root the document
+    // observer cannot see (and its dynamic i18n import is broken in the CDN
+    // build), so walk and re-walk the shadow root whenever it is present.
+    function localizeShadowPickers(root) {
+        const pickers = [];
+        if (root.matches && root.matches('em-emoji-picker')) pickers.push(root);
+        if (root.querySelectorAll) pickers.push(...root.querySelectorAll('em-emoji-picker'));
+        for (const picker of pickers) {
+            const sr = picker.shadowRoot;
+            if (!sr || sr.__i18nObserved) continue;
+            sr.__i18nObserved = true;
+            const walk = () => {
+                try {
+                    translateTree(sr);
+                } catch (err) {
+                    /* shadow content churns while data loads; ignore */
+                }
+            };
+            walk();
+            new MutationObserver(walk).observe(sr, { childList: true, subtree: true });
+        }
     }
 
     // Update already-created tippy tooltips to the current language (uses recorded originals).
