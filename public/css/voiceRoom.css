@@ -36,10 +36,10 @@ body.voice-room #voiceSidebarHeader {
     justify-content: space-between;
     padding: 0 14px;
     box-sizing: border-box;
-    background: var(--navbar-bg, rgba(43, 45, 49, 0.9));
+    background: var(--navbar-bg, rgba(32, 30, 26, 0.9));
     backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--vr-border, rgba(255, 255, 255, 0.06));
-    color: var(--vr-ink, #f2f3f5);
+    border-bottom: 1px solid var(--vr-border, rgba(255, 240, 200, 0.08));
+    color: var(--vr-ink, #ece7db);
 }
 
 body.voice-room .voice-sidebar-title {
@@ -52,7 +52,7 @@ body.voice-room .voice-sidebar-title {
 }
 
 body.voice-room .voice-sidebar-title i {
-    color: var(--dd-color, #5865f2);
+    color: var(--dd-color, #e8a33d);
     font-size: 14px;
 }
 
@@ -67,7 +67,7 @@ body.voice-room .voice-sidebar-meta {
     align-items: center;
     gap: 6px;
     font-size: 12px;
-    color: var(--vr-ink-muted, #949ba4);
+    color: var(--vr-ink-muted, #a39b8a);
     flex-shrink: 0;
 }
 
@@ -120,8 +120,8 @@ body.voice-room #bottomButtons {
     margin: 0 !important;
     padding: 8px 10px !important;
     border-radius: 0 !important;
-    border-top: 1px solid var(--vr-border, rgba(255, 255, 255, 0.06)) !important;
-    background: var(--btns-bg-color, rgba(43, 45, 49, 0.9)) !important;
+    border-top: 1px solid var(--vr-border, rgba(255, 240, 200, 0.08)) !important;
+    background: var(--btns-bg-color, rgba(32, 30, 26, 0.9)) !important;
     backdrop-filter: blur(12px);
     z-index: 12;
 }
@@ -150,7 +150,7 @@ body.voice-room #participantViewDropdown {
 }
 
 body.voice-room #bottomButtons .split-btn > button:hover {
-    background: var(--vr-border, rgba(255, 255, 255, 0.08));
+    background: var(--vr-border, rgba(255, 240, 200, 0.08));
 }
 
 /* Video controls have no meaning in an audio-only room */
@@ -175,14 +175,14 @@ body.voice-room .Camera {
     padding: 8px 10px;
     border-radius: 8px;
     overflow: visible;
-    background: var(--vr-row-bg, rgba(255, 255, 255, 0.03));
-    border: 1px solid var(--vr-border, rgba(255, 255, 255, 0.06));
+    background: var(--vr-row-bg, rgba(255, 243, 214, 0.035));
+    border: 1px solid var(--vr-border, rgba(255, 240, 200, 0.08));
     box-shadow: none;
     animation: none;
 }
 
 body.voice-room .Camera:hover {
-    background: var(--vr-hover, rgba(255, 255, 255, 0.06));
+    background: var(--vr-hover, rgba(255, 240, 200, 0.08));
 }
 
 body.voice-room .Camera > video {
@@ -208,7 +208,7 @@ body.voice-room .Camera > .videoPeerName {
     border-radius: 0;
     font-size: 14px;
     font-weight: 600;
-    color: var(--vr-ink, #f2f3f5);
+    color: var(--vr-ink, #ece7db);
     flex: 1 1 auto;
     min-width: 0;
     overflow: hidden;
@@ -237,12 +237,12 @@ body.voice-room .Camera > .navbar button {
     font-size: 0.85rem;
     background: transparent;
     border-radius: 6px;
-    color: var(--vr-ink-muted, #949ba4);
+    color: var(--vr-ink-muted, #a39b8a);
 }
 
 body.voice-room .Camera > .navbar button:hover {
-    background: var(--vr-hover, rgba(255, 255, 255, 0.06)) !important;
-    color: var(--vr-ink, #f2f3f5);
+    background: var(--vr-hover, rgba(255, 240, 200, 0.08)) !important;
+    color: var(--vr-ink, #ece7db);
 }
 
 body.voice-room .Camera > .navbar div {
@@ -296,7 +296,7 @@ body.voice-room #msgerDraggable {
 
 body.voice-room #msgerDraggable .msger {
     border-radius: 0;
-    background: var(--msger-bg, #313338);
+    background: var(--msger-bg, #262420);
 }
 
 body.voice-room #msgerDraggable .msger-layout {
@@ -304,7 +304,7 @@ body.voice-room #msgerDraggable .msger-layout {
 }
 
 body.voice-room #msgerHeader {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid var(--vr-border, rgba(255, 240, 200, 0.08));
     background: transparent;
 }
 
@@ -348,10 +348,10 @@ body.voice-room .left-msg .msg-bubble,
 body.voice-room .right-msg .msg-bubble,
 body.voice-room .left-msg .private-msg-bubble,
 body.voice-room .right-msg .private-msg-bubble {
-    background: var(--left-msg-bg, #383a40);
+    background: var(--left-msg-bg, #322e26);
     border-radius: 8px;
     box-shadow: none;
-    color: var(--vr-ink, #f2f3f5);
+    color: var(--vr-ink, #ece7db);
 }
 
 /* Upstream hardcodes dark-theme text colors; re-ink them per theme */
@@ -365,13 +365,13 @@ body.voice-room .empty-chat-title,
 body.voice-room .empty-chat-desc,
 body.voice-room .empty-participants-title,
 body.voice-room .empty-participants-desc {
-    color: var(--vr-ink, #f2f3f5);
+    color: var(--vr-ink, #ece7db);
 }
 
 body.voice-room .msger-conversation-meta,
 body.voice-room .empty-chat-desc,
 body.voice-room .empty-participants-desc {
-    color: var(--vr-ink-muted, #949ba4);
+    color: var(--vr-ink-muted, #a39b8a);
 }
 
 /* Upstream hardcodes white text across the settings panel, sidebar menus,
@@ -383,7 +383,7 @@ body.voice-room .settings-field-hint,
 body.voice-room .settings-option-copy small,
 body.voice-room .extra-info-label > span,
 body.voice-room .device-menu-header {
-    color: var(--vr-ink-muted, #949ba4);
+    color: var(--vr-ink-muted, #a39b8a);
 }
 
 body.voice-room .tab button .tabButtonText,
@@ -412,11 +412,11 @@ body.voice-room .file-transfer-title,
 body.voice-room .file-transfer-actions button,
 body.voice-room select,
 body.voice-room select option {
-    color: var(--vr-ink, #f2f3f5);
+    color: var(--vr-ink, #ece7db);
 }
 
 body.voice-room .theme-card.active span {
-    color: var(--vr-ink, #f2f3f5);
+    color: var(--vr-ink, #ece7db);
 }
 
 body.voice-room .msger-chat-item-copy small,
@@ -424,16 +424,16 @@ body.voice-room #msgerPrivateChatsEmpty span,
 body.voice-room .empty-caption-desc,
 body.voice-room .file-transfer-subtitle,
 body.voice-room #disconnectBannerMsg {
-    color: var(--vr-ink-muted, #949ba4);
+    color: var(--vr-ink-muted, #a39b8a);
 }
 
 body.voice-room #mySettings button {
-    color: var(--vr-ink, #f2f3f5);
+    color: var(--vr-ink, #ece7db);
 }
 
 /* #mySettings hardcodes white on p/i/select at ID specificity — match it */
 body.voice-room #mySettings p {
-    color: var(--vr-ink, #f2f3f5);
+    color: var(--vr-ink, #ece7db);
 }
 
 body.voice-room #mySettings i {
@@ -442,12 +442,12 @@ body.voice-room #mySettings i {
 
 body.voice-room #mySettings select,
 body.voice-room #mySettings select option {
-    color: var(--vr-ink, #f2f3f5);
+    color: var(--vr-ink, #ece7db);
 }
 
 /* Status classes (upstream sets them with !important) become theme-aware */
 body.voice-room .red {
-    color: var(--vr-danger, #ff6b6b) !important;
+    color: var(--vr-danger, #ff7a6b) !important;
 }
 
 body.voice-room .orange {
@@ -455,11 +455,11 @@ body.voice-room .orange {
 }
 
 body.voice-room .green {
-    color: var(--vr-success, #3ddc97) !important;
+    color: var(--vr-success, #4ecb8f) !important;
 }
 
 body.voice-room #bottomButtons #exitMenu .red {
-    color: var(--vr-danger, #ff6b6b) !important;
+    color: var(--vr-danger, #ff7a6b) !important;
 }
 
 /* Remaining ID-specificity whites (upstream uses #bottomButtons #menu —
@@ -469,14 +469,14 @@ body.voice-room #bottomButtons #participantViewMenu button.active,
 body.voice-room #bottomButtons #exitMenu button,
 body.voice-room .output-volume-value,
 body.voice-room #mySettings input {
-    color: var(--vr-ink, #f2f3f5);
+    color: var(--vr-ink, #ece7db);
 }
 
 body.voice-room #bottomButtons #settingsExtraMenu .device-menu-header.extra-menu-group,
 body.voice-room #mySettings #shareMediaUrlHint,
 body.voice-room #loadingDiv,
 body.voice-room #loadingDiv p {
-    color: var(--vr-ink-muted, #949ba4);
+    color: var(--vr-ink-muted, #a39b8a);
 }
 
 /* Destructive / status accents keep their meaning in both palettes */
@@ -488,16 +488,16 @@ body.voice-room #ejectEveryoneBtn .msger-participant-action-label,
 body.voice-room #exitMenu .red,
 body.voice-room .navbar-dropdown-content .red,
 body.voice-room #disconnectBannerTitle {
-    color: var(--vr-danger, #ff6b6b);
+    color: var(--vr-danger, #ff7a6b);
 }
 
 body.voice-room .file-transfer-kicker {
-    color: var(--dd-color, #5865f2);
+    color: var(--dd-color, #e8a33d);
 }
 
 body.voice-room #sendFilePercentage,
 body.voice-room #receiveFilePercentage {
-    color: var(--vr-success, #3ddc97);
+    color: var(--vr-success, #4ecb8f);
 }
 
 body.voice-room .private-msg-bubble,
@@ -514,12 +514,12 @@ body.voice-room .msg-info {
 
 body.voice-room .msg-info-name {
     font-size: 0.95rem;
-    color: var(--vr-ink, #f2f3f5);
+    color: var(--vr-ink, #ece7db);
 }
 
 body.voice-room .msg-info-time {
     font-size: 0.68rem;
-    opacity: 0.55;
+    opacity: 0.75;
 }
 
 body.voice-room .msg-text {
@@ -549,7 +549,7 @@ body.voice-room .msg-date-divider {
     align-items: center;
     gap: 12px;
     margin: 16px 18px 8px;
-    color: var(--vr-ink-muted, #949ba4);
+    color: var(--vr-ink-muted, #a39b8a);
     font-size: 12px;
     user-select: none;
 }
@@ -559,20 +559,20 @@ body.voice-room .msg-date-divider::after {
     content: '';
     flex: 1;
     height: 1px;
-    background: var(--vr-border, rgba(255, 255, 255, 0.08));
+    background: var(--vr-border, rgba(255, 240, 200, 0.08));
 }
 
 /* Composer — QQ-style: toolbar on top, tall input, blue send split bottom-right */
 body.voice-room .msger-composer {
     padding: 8px 12px 12px;
     background: transparent;
-    border-top: 1px solid var(--vr-border, rgba(255, 255, 255, 0.08));
+    border-top: 1px solid var(--vr-border, rgba(255, 240, 200, 0.08));
 }
 
 body.voice-room .msger-inputarea {
     gap: 2px;
     padding: 4px 8px 8px;
-    background: var(--select-bg, #404249);
+    background: var(--select-bg, #1a1815);
     border-radius: 10px;
 }
 
@@ -588,7 +588,12 @@ body.voice-room .msger-inputarea .msger-input {
     background: transparent;
     border: none;
     border-radius: 0;
-    color: var(--vr-ink, #f2f3f5);
+    color: var(--vr-ink, #ece7db);
+}
+
+body.voice-room .msger-inputarea .msger-input::placeholder {
+    color: var(--vr-ink-muted, #a39b8a);
+    opacity: 1;
 }
 
 body.voice-room .msger-input-buttons {
@@ -601,12 +606,12 @@ body.voice-room .msger-input-buttons button {
     height: 32px;
     border-radius: 6px;
     background: transparent;
-    color: var(--vr-ink-muted, #949ba4);
+    color: var(--vr-ink-muted, #a39b8a);
 }
 
 body.voice-room .msger-input-buttons button:hover {
-    background: var(--vr-hover, rgba(255, 255, 255, 0.06));
-    color: var(--vr-ink, #f2f3f5);
+    background: var(--vr-hover, rgba(255, 240, 200, 0.08));
+    color: var(--vr-ink, #ece7db);
 }
 
 body.voice-room .msger-composer-footer {
@@ -618,7 +623,8 @@ body.voice-room .msger-composer-footer {
 body.voice-room #msgerSendBtn,
 body.voice-room .msger-send-mode-btn {
     height: 32px;
-    background: var(--dd-color, #5865f2);
+    background: var(--dd-color, #e8a33d);
+    color: var(--toggle-on-ink, #241a05);
     box-shadow: none;
 }
 
@@ -642,21 +648,21 @@ body.voice-room .msger-send-mode-btn:hover {
 }
 
 body.voice-room .msger-send-mode-menu {
-    background: var(--msger-private-bg, #2b2d31);
-    border: 1px solid var(--vr-border, rgba(255, 255, 255, 0.08));
+    background: var(--msger-private-bg, #201e1a);
+    border: 1px solid var(--vr-border, rgba(255, 240, 200, 0.08));
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
 }
 
 body.voice-room .msger-send-mode-menu button {
-    color: var(--vr-ink, #f2f3f5);
+    color: var(--vr-ink, #ece7db);
 }
 
 body.voice-room .msger-send-mode-menu button:hover {
-    background: var(--vr-hover, rgba(255, 255, 255, 0.06));
+    background: var(--vr-hover, rgba(255, 240, 200, 0.08));
 }
 
 body.voice-room .msger-send-mode-menu button.active i {
-    color: var(--dd-color, #5865f2);
+    color: var(--dd-color, #e8a33d);
 }
 
 /* ============================================================
@@ -682,8 +688,8 @@ body.voice-room .msger-send-mode-menu button.active i {
         bottom: var(--vr-dock-h) !important;
         transform: translateX(-100%);
         transition: transform 0.25s ease;
-        background: var(--msger-private-bg, #2b2d31);
-        border-right: 1px solid var(--vr-border, rgba(255, 255, 255, 0.08));
+        background: var(--msger-private-bg, #201e1a);
+        border-right: 1px solid var(--vr-border, rgba(255, 240, 200, 0.08));
         z-index: 30;
     }
 
