@@ -31,7 +31,10 @@ class UIManager {
             isProcessing ? 'success' : 'info'
         );
 
-        this.elements.labelNoiseSuppression.style.color = noiseSuppressionEnabled ? 'lime' : 'white';
+        this.elements.labelNoiseSuppression.style.color =
+            noiseSuppressionEnabled
+                ? getComputedStyle(document.body).getPropertyValue('--vr-success').trim() || 'lime'
+                : getComputedStyle(document.body).getPropertyValue('--vr-ink').trim() || 'white';
     }
 }
 

@@ -374,6 +374,132 @@ body.voice-room .empty-participants-desc {
     color: var(--vr-ink-muted, #949ba4);
 }
 
+/* Upstream hardcodes white text across the settings panel, sidebar menus,
+   dropdowns and overlays; re-ink them through the theme vars so the light
+   palette stays readable too. */
+body.voice-room .settings-nav-label,
+body.voice-room .settings-section-intro p,
+body.voice-room .settings-field-hint,
+body.voice-room .settings-option-copy small,
+body.voice-room .extra-info-label > span,
+body.voice-room .device-menu-header {
+    color: var(--vr-ink-muted, #949ba4);
+}
+
+body.voice-room .tab button .tabButtonText,
+body.voice-room .settings-section-intro h3,
+body.voice-room #mySettings .title p,
+body.voice-room #mySettings .title strong,
+body.voice-room .settings-option-copy strong,
+body.voice-room #mySettings td,
+body.voice-room #mySettings th,
+body.voice-room .extra-info-badge,
+body.voice-room .theme-card span,
+body.voice-room .room-emoji-tab span,
+body.voice-room .transcription-switch-label,
+body.voice-room .msger-menu-action-label,
+body.voice-room .msger-participant-action-label,
+body.voice-room .msger-chat-item-copy strong,
+body.voice-room .navbar-dropdown-content .navbar-dropdown-item span,
+body.voice-room #participantViewMenu button,
+body.voice-room #exitDropdown button,
+body.voice-room .whiteboard-dropdown button,
+body.voice-room #whiteboardDropdownMenu label span,
+body.voice-room #loadingDiv h1,
+body.voice-room #qrText,
+body.voice-room .empty-caption-title,
+body.voice-room .file-transfer-title,
+body.voice-room .file-transfer-actions button,
+body.voice-room select,
+body.voice-room select option {
+    color: var(--vr-ink, #f2f3f5);
+}
+
+body.voice-room .theme-card.active span {
+    color: var(--vr-ink, #f2f3f5);
+}
+
+body.voice-room .msger-chat-item-copy small,
+body.voice-room #msgerPrivateChatsEmpty span,
+body.voice-room .empty-caption-desc,
+body.voice-room .file-transfer-subtitle,
+body.voice-room #disconnectBannerMsg {
+    color: var(--vr-ink-muted, #949ba4);
+}
+
+body.voice-room #mySettings button {
+    color: var(--vr-ink, #f2f3f5);
+}
+
+/* #mySettings hardcodes white on p/i/select at ID specificity — match it */
+body.voice-room #mySettings p {
+    color: var(--vr-ink, #f2f3f5);
+}
+
+body.voice-room #mySettings i {
+    color: inherit;
+}
+
+body.voice-room #mySettings select,
+body.voice-room #mySettings select option {
+    color: var(--vr-ink, #f2f3f5);
+}
+
+/* Status classes (upstream sets them with !important) become theme-aware */
+body.voice-room .red {
+    color: var(--vr-danger, #ff6b6b) !important;
+}
+
+body.voice-room .orange {
+    color: var(--vr-warn, #fbbf24) !important;
+}
+
+body.voice-room .green {
+    color: var(--vr-success, #3ddc97) !important;
+}
+
+body.voice-room #bottomButtons #exitMenu .red {
+    color: var(--vr-danger, #ff6b6b) !important;
+}
+
+/* Remaining ID-specificity whites (upstream uses #bottomButtons #menu —
+   two IDs, so match both to override) */
+body.voice-room #bottomButtons #participantViewMenu button,
+body.voice-room #bottomButtons #participantViewMenu button.active,
+body.voice-room #bottomButtons #exitMenu button,
+body.voice-room .output-volume-value,
+body.voice-room #mySettings input {
+    color: var(--vr-ink, #f2f3f5);
+}
+
+body.voice-room #bottomButtons #settingsExtraMenu .device-menu-header.extra-menu-group,
+body.voice-room #mySettings #shareMediaUrlHint,
+body.voice-room #loadingDiv,
+body.voice-room #loadingDiv p {
+    color: var(--vr-ink-muted, #949ba4);
+}
+
+/* Destructive / status accents keep their meaning in both palettes */
+body.voice-room #msgerClean .msger-menu-action-label,
+body.voice-room #captionClean .msger-menu-action-label,
+body.voice-room #muteEveryoneBtn .msger-participant-action-label,
+body.voice-room #hideEveryoneBtn .msger-participant-action-label,
+body.voice-room #ejectEveryoneBtn .msger-participant-action-label,
+body.voice-room #exitMenu .red,
+body.voice-room .navbar-dropdown-content .red,
+body.voice-room #disconnectBannerTitle {
+    color: var(--vr-danger, #ff6b6b);
+}
+
+body.voice-room .file-transfer-kicker {
+    color: var(--dd-color, #5865f2);
+}
+
+body.voice-room #sendFilePercentage,
+body.voice-room #receiveFilePercentage {
+    color: var(--vr-success, #3ddc97);
+}
+
 body.voice-room .private-msg-bubble,
 body.voice-room .msg-bubble {
     max-width: min(72%, 680px);

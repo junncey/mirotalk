@@ -3667,6 +3667,9 @@ let themeMap = {
         '--vr-hover': 'rgba(255, 255, 255, 0.06)',
         '--vr-border': 'rgba(255, 255, 255, 0.06)',
         '--vr-row-bg': 'rgba(255, 255, 255, 0.03)',
+        '--vr-danger': '#ff6b6b',
+        '--vr-warn': '#fbbf24',
+        '--vr-success': '#3ddc97',
     },
     light: {
         // [CUSTOM] Matching light palette for the voice room.
@@ -3694,6 +3697,9 @@ let themeMap = {
         '--vr-hover': 'rgba(0, 0, 0, 0.05)',
         '--vr-border': 'rgba(0, 0, 0, 0.08)',
         '--vr-row-bg': 'rgba(0, 0, 0, 0.03)',
+        '--vr-danger': '#d83a42',
+        '--vr-warn': '#b45309',
+        '--vr-success': '#177e4d',
     },
 };
 
