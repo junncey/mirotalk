@@ -472,6 +472,47 @@ body.voice-room #mySettings input {
     color: var(--vr-ink, #ece7db);
 }
 
+/* Settings modal text/icons: upstream never sets a color on #mySettings, so
+   everything inherits the UA default black (invisible on the dark palette);
+   .title and a few field rows hardcode white instead. Route them all
+   through the theme ink. */
+body.voice-room #mySettings,
+body.voice-room #mySettings .title,
+body.voice-room #mySettings .inline-check-box,
+body.voice-room #mySettings .buttons,
+body.voice-room #mySettings #themeColorPicker,
+body.voice-room .email-invitation-date-field label {
+    color: var(--vr-ink, #ece7db);
+}
+
+/* Theme cards: moon follows the muted ink, sun and the active card the accent.
+   Needs #mySettings-level specificity to beat the #mySettings i rules. */
+body.voice-room #mySettings .theme-card i {
+    color: var(--vr-ink-muted, #a39b8a);
+}
+
+body.voice-room #mySettings .theme-card[data-theme='light'] i,
+body.voice-room #mySettings .theme-card.active i {
+    color: var(--dd-color, #e8a33d);
+}
+
+/* Chat header buttons (upstream hardcodes white on .msger-header) */
+body.voice-room .msger-header,
+body.voice-room .msger-private-header,
+body.voice-room .msger-header-title > button,
+body.voice-room .msger-header-options > button,
+body.voice-room .msger-header-options .dropdown-toggle-custom {
+    color: var(--vr-ink-muted, #a39b8a);
+}
+
+body.voice-room .msger-header-title > button:hover,
+body.voice-room .msger-header-options > button:hover,
+body.voice-room .msger-header-options .dropdown-toggle-custom:hover,
+body.voice-room .msger-header-title > button.active,
+body.voice-room .msger-header-options > button.active {
+    color: var(--vr-ink, #ece7db);
+}
+
 body.voice-room #bottomButtons #settingsExtraMenu .device-menu-header.extra-menu-group,
 body.voice-room #mySettings #shareMediaUrlHint,
 body.voice-room #loadingDiv,

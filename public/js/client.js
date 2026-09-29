@@ -1771,11 +1771,8 @@ function handleServerInfo(config) {
         handleRules(isPresenter);
     }
 
-    if (notify && peers_count == 1) {
-        shareRoomMeetingURL(true);
-    } else {
-        checkShareScreen();
-    }
+    // [CUSTOM] No auto share popup on join — the invite button opens it instead.
+    checkShareScreen();
 
     checkChatOnJoin();
 }
@@ -6707,7 +6704,8 @@ function manageButtons() {
  */
 function setShareRoomBtn() {
     shareRoomBtn.addEventListener('click', async (e) => {
-        shareRoomUrl();
+        // [CUSTOM] Always open the in-app share popup (native share sheet is jarring here).
+        shareRoomMeetingURL();
     });
     shareRoomBtn.addEventListener('mouseenter', () => {
         if (isMobileDevice || !buttons.main.showShareQr) return;
@@ -7265,7 +7263,8 @@ function setParticipantsBtn() {
     }
 
     participantsInviteBtn.addEventListener('click', () => {
-        shareRoomUrl();
+        // [CUSTOM] The invite button opens the share-room popup (URL + QR).
+        shareRoomMeetingURL();
     });
     participantsCopyInviteLinkBtn.addEventListener('click', () => {
         copyRoomURL();
