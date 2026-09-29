@@ -272,6 +272,8 @@ const msgerShowChatOnMsg = getId('msgerShowChatOnMsg');
 const msgerSpeechMsgDiv = getId('msgerSpeechMsgDiv');
 const msgerSpeechMsg = getId('msgerSpeechMsg');
 const msgerSendBtn = getId('msgerSendBtn');
+const msgerSendModeBtn = getId('msgerSendModeBtn');
+const msgerSendModeMenu = getId('msgerSendModeMenu');
 
 const chatInputEmoji = {
     '<3': '❤️',
@@ -916,6 +918,7 @@ function setButtonsToolTip() {
     setTippy(msgerCleanTextBtn, 'Clean', 'top');
     setTippy(msgerPasteBtn, 'Paste', 'top');
     setTippy(msgerSendBtn, 'Send', 'top');
+    setTippy(msgerSendModeBtn, 'Send options', 'top');
     // Chat participants buttons
     setTippy(msgerCPCloseBtn, 'Close', 'bottom');
     // Caption buttons
@@ -7083,10 +7086,17 @@ function setChatRoomBtn() {
         sendVideoUrl(shareTarget.videoPeerId, shareTarget.peerName, shareTarget.broadcast);
     });
 
-    // Execute a function when the user releases a key on the keyboard
-    msgerInput.addEventListener('keyup', (e) => {
-        // Number 13 is the "Enter" key on the keyboard
-        if (e.keyCode === 13 && (isMobileDevice || !e.shiftKey)) {
+    // [CUSTOM] QQ-style sending keys: Enter sends by default, Ctrl+Enter mode
+    // selectable from the send button menu. The isComposing guard keeps
+    // Chinese IME confirmation from firing the send.
+    msgerInput.addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter' || e.isComposing || e.keyCode === 229) return;
+        const send = isMobileDevice
+            ? !e.shiftKey
+            : lsSettings.enter_to_send
+              ? !e.shiftKey && !e.ctrlKey
+              : e.ctrlKey || e.metaKey;
+        if (send) {
             e.preventDefault();
             msgerSendBtn.click();
         }
@@ -7106,6 +7116,32 @@ function setChatRoomBtn() {
         isChatPasteTxt = true;
         checkLineBreaks();
     };
+
+    // [CUSTOM] QQ-style: pasting an image from the clipboard sends it as a
+    // file to the current conversation instead of inserting text.
+    msgerInput.addEventListener('paste', (e) => {
+        const items = e.clipboardData && e.clipboardData.items;
+        if (!items) return;
+        for (const item of items) {
+            if (item.kind !== 'file' || !item.type.startsWith('image/')) continue;
+            const blob = item.getAsFile();
+            if (!blob) continue;
+            e.preventDefault();
+            isChatPasteTxt = false;
+            const ext = (item.type.split('/')[1] || 'png').replace('jpeg', 'jpg');
+            const stamp = new Date().toISOString().slice(0, 19).replace(/[-:T]/g, '');
+            // keep the original name when the clipboard carries a real file
+            const fileName =
+                blob.name && /\.(png|jpe?g|gif|webp|bmp|svg)$/i.test(blob.name)
+                    ? blob.name
+                    : `clipboard_${stamp}.${ext}`;
+            const file = new File([blob], fileName, { type: item.type });
+            const shareTarget = getConversationShareTarget('an image');
+            if (!shareTarget) return;
+            sendFileInformations(file, shareTarget.peerId, shareTarget.broadcast, shareTarget.peerName);
+            return;
+        }
+    });
 
     // clean input msg txt
     msgerCleanTextBtn.addEventListener('click', (e) => {
@@ -7148,6 +7184,30 @@ function setChatRoomBtn() {
         // prevent refresh page
         e.preventDefault();
         await sendChatMessage();
+    });
+
+    // [CUSTOM] QQ-style send split: pick Enter vs Ctrl+Enter to send
+    const renderSendModeMenu = () => {
+        msgerSendModeMenu.querySelectorAll('button[data-mode]').forEach((btn) => {
+            btn.classList.toggle('active', (btn.dataset.mode === 'enter') === !!lsSettings.enter_to_send);
+        });
+    };
+    msgerSendModeBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        msgerSendModeMenu.classList.toggle('hidden');
+        renderSendModeMenu();
+    });
+    msgerSendModeMenu.addEventListener('click', (e) => {
+        const btn = e.target.closest('button[data-mode]');
+        if (!btn) return;
+        lsSettings.enter_to_send = btn.dataset.mode === 'enter';
+        lS.setSettings(lsSettings);
+        msgerSendModeMenu.classList.add('hidden');
+        renderSendModeMenu();
+    });
+    handleClickOutside(msgerSendModeMenu, msgerSendModeBtn, () => {
+        msgerSendModeMenu.classList.add('hidden');
     });
 
     // adapt input font size 4 mobile
@@ -7648,11 +7708,13 @@ function setChatEmojiBtn() {
         e.preventDefault();
         // [CUSTOM] Voice room: hover-open/hover-close is disabled there (the
         // picker detaches from the composer), so click toggles on desktop too.
-        if (isMobileDevice || e.detail === 0 || VOICE_ROOM.enabled) {
+        // VOICE_ROOM.layout (not .enabled): the enabled flag only turns true
+        // after the first peer joins, which is too late for handler setup.
+        if (isMobileDevice || e.detail === 0 || VOICE_ROOM.layout) {
             hideShowEmojiPicker();
         }
     });
-    if (!isMobileDevice && !VOICE_ROOM.enabled) {
+    if (!isMobileDevice && !VOICE_ROOM.layout) {
         msgerEmojiBtn.addEventListener('mouseenter', showChatEmojiPicker);
         msgerEmojiBtn.closest('.msger-composer')?.addEventListener('mouseleave', hideChatEmojiPicker);
     }
@@ -13087,7 +13149,8 @@ function checkLineBreaks() {
 
     msgerInput.style.height = 'auto';
 
-    const minHeight = 52;
+    // [CUSTOM] voice-room composer is the taller QQ-style panel
+    const minHeight = VOICE_ROOM.enabled ? 80 : 52;
     const maxHeight = 160;
     const nextHeight = Math.min(Math.max(msgerInput.scrollHeight, minHeight), maxHeight);
 

@@ -30,6 +30,7 @@ class LocalStorage {
             keyboard_shortcuts: false,
             video_obj_fit: 2, // cover
             theme: 0, // dark
+            enter_to_send: true, // [CUSTOM] false = Ctrl+Enter to send (QQ-style composer)
             theme_color: '#000000', // custom theme color
             theme_custom: false, // keep custom theme
             buttons_bar: 0, // vertical

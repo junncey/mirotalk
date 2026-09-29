@@ -595,6 +595,14 @@
                             <section id="msgerEmojiPicker" class="hidden fadein chatEmojiPicker"></section>
 
                             <div class="msger-inputarea">
+                                <div class="msger-input-buttons">
+                                    <button id="msgerEmojiBtn" class="fas fa-smile"></button>
+                                    <button id="msgerMarkdownBtn" class="fab fa-markdown"></button>
+                                    <button id="msgerShareFileBtn" class="fas fa-paperclip"></button>
+                                    <button id="msgerVideoUrlBtn" class="fab fa-youtube"></button>
+                                    <button id="msgerCleanTextBtn" class="fas fa-trash"></button>
+                                    <button id="msgerPasteBtn" class="fas fa-paste"></button>
+                                </div>
                                 <textarea
                                     rows="1"
                                     cols="1"
@@ -602,16 +610,28 @@
                                     class="msger-input"
                                     placeholder="Write a message..."
                                 ></textarea>
-                            </div>
-
-                            <div class="msger-input-buttons">
-                                <button id="msgerEmojiBtn" class="fas fa-smile"></button>
-                                <button id="msgerMarkdownBtn" class="fab fa-markdown"></button>
-                                <button id="msgerShareFileBtn" class="fas fa-paperclip"></button>
-                                <button id="msgerVideoUrlBtn" class="fab fa-youtube"></button>
-                                <button id="msgerCleanTextBtn" class="fas fa-trash"></button>
-                                <button id="msgerPasteBtn" class="fas fa-paste"></button>
-                                <button id="msgerSendBtn" class="fas fa-paper-plane"></button>
+                                <div class="msger-composer-footer">
+                                    <div class="msger-send-split">
+                                        <button id="msgerSendBtn" class="msger-send-btn">Send</button>
+                                        <button
+                                            id="msgerSendModeBtn"
+                                            class="msger-send-mode-btn"
+                                            aria-label="Send options"
+                                        >
+                                            <i class="fas fa-chevron-down"></i>
+                                        </button>
+                                        <div id="msgerSendModeMenu" class="msger-send-mode-menu hidden">
+                                            <button type="button" data-mode="enter">
+                                                <i class="fas fa-check"></i>
+                                                <span>Press Enter to send</span>
+                                            </button>
+                                            <button type="button" data-mode="ctrl-enter">
+                                                <i class="fas fa-check"></i>
+                                                <span>Press Ctrl+Enter to send</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </section>
